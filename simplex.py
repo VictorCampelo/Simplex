@@ -1,19 +1,19 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-def pivoting(tableaux,_in, _out):
+def pivoting(tableaux,_colPivot, _linePivot):
     i = 0
     newTableaux = []
     pivotLine = []
     mult = 1
-    for line in tableaux:
+    for line in tableaux: #seek and store pivot line
         aux = []
         j = 0
         for col in line:
             if j == 0:
                 j+=1
                 continue
-            if i == _out: #pivot line
-                if j == _in: #value from column pivot
+            if i == _linePivot: #index pivot line
+                if j == _colPivot: #index column pivot
                     if col != 1: 
                         div = float(col)
                         k = 0
@@ -22,7 +22,12 @@ def pivoting(tableaux,_in, _out):
                                 pivotLine.append(col2)
                             else:
                                 pivotLine.append(float(col2)/div)
-                            k+=1              
+                            k+=1 
+                    else:
+                        k = 0
+                        for col2 in line:
+                            pivotLine.append(col2)
+                            k+=1               
                     break
             j+=1 
         i+=1
@@ -36,11 +41,11 @@ def pivoting(tableaux,_in, _out):
             if j == 0:
                 j+=1
                 continue
-            if i == _out:
+            if i == _linePivot:
                 newTableaux.append(pivotLine)
                 j+=1
                 break    
-            elif j == _in: # itsnot pivot line, but is over pivot column
+            elif j == _colPivot: # itsnot pivot line, but is over pivot column
                 if col == 0: #line already is normalized
                     for col2 in line:
                         aux.append(col2)
@@ -48,7 +53,7 @@ def pivoting(tableaux,_in, _out):
                     mult = 0
                     l = 0 
                     for col2 in line:
-                        if l == _in:
+                        if l == _colPivot:
                             mult = col2
                             break
                         l+=1    
@@ -64,28 +69,24 @@ def pivoting(tableaux,_in, _out):
         if aux:
             newTableaux.append(aux)    
         i+=1
-    print("aquii")    
     for line in newTableaux:
         print(line)
     return newTableaux    
 
-def seachOut(tableaux, minOrMax, p):
+def seachOut(tableaux, minOrMax, p): #seach index var from base that'll come out
     piv = 0
     i = 0
     if minOrMax == 1:#max
         maxI = 0
         for line in tableaux:
             j = 0 
-            if i < len(tableaux)-1:
+            if i < len(tableaux):
                 for col in line:
-                    if i == len(tableaux)-1: # Z line
-                        j += 1
-                        continue
                     if j == p:
-                        if col != 0:
-                            if (line[-1]/col) > maxI:
+                        if col != 0: # SPLIT TEST
+                            if (line[-1]/col) >= maxI: #last column (result) div for value pivot column
                                 maxI = (line[-1]/col)
-                                piv = j
+                                piv = i
                     j += 1
             else:
                 break        
@@ -94,44 +95,44 @@ def seachOut(tableaux, minOrMax, p):
         minI = 0
         for line in tableaux:
             j = 0 
-            for col in line:
-                if i == len(tableaux)-1: # Z line
+            if i < len(tableaux):
+                for col in line:
+                    if j == p:
+                        if col != 0: #SPLIT TEST
+                            if (line[-1]/col) <= minI:
+                                minI = (line[-1]/col)
+                                piv = i
                     j += 1
-                    continue
-                if j == p:
-                    if col != 0:
-                        if (line[-1]/col) < minI:
-                            minI = (line[-1]/col)
-                            piv = j
-                j += 1
+            else:
+                break    
             i += 1
     return piv  
 
-def seachIn(Z, minOrMax):
+def seachIn(Z, minOrMax): # seach the value that'll come to base (index column)
     piv = 0
     i = 0
     if minOrMax == 1:
-        max = 0
+        maxI = 0
         for res in Z:
             if i == 0:
                 i += 1       
                 continue     
             if i == len(Z)-1:
                 break
-            if res > max:
-                max = res
+            if res > maxI:
+                maxI = res
                 piv = i    
             i+=1  
     elif minOrMax == 2:
-        min = 0
+        minI = 0
         for res in Z:
             if i == 0:
                 i += 1
                 continue
             if i == len(Z)-1:
                 break
-            if res < min:
-                min = res
+            if res < minI:
+                minI = res
                 piv = i
             i+=1                    
     return piv    
@@ -164,12 +165,14 @@ def iterations(tableaux, minOrMax):
     tam = len(tableaux[-1])# [-1] -> last line(element) from matrix
     while conditions(tableaux[-1], minOrMax): # while Z values are less than 0
         print("iteration "+str(i+1))
-        _col = seachIn(tableaux[-1], minOrMax) # index column that enter in the base
-        _line = seachOut(tableaux, minOrMax, _col) # index base that out from the base
+        _colPivot = seachIn(tableaux[-1], minOrMax) # index column that enter in the base
+        _linePivot = seachOut(tableaux, minOrMax, _colPivot) # index base that out from the base
         #pivoting
-        print(_col)
-        print(_line)
-        tableaux = pivoting(tableaux, _col, _line)
+        print("_linePivot")
+        print(_linePivot)
+        print("_colPivot")        
+        print(_colPivot)        
+        tableaux = pivoting(tableaux, _colPivot, _linePivot)
         i+=1
 
 def make_tableaux(Z,type_restrict, restrict, base, result, row, col):
@@ -192,15 +195,11 @@ def make_tableaux(Z,type_restrict, restrict, base, result, row, col):
             elif j == col+1:
                 aux.append(result[i]) # result lines
             elif i == len(base):
-                print("j")
-                print(j)
                 aux.append(Z[j-1])
             else:
                 aux.append(restrict[i][r])
                 r+=1
-        tableaux_1.append(aux)
-
-    print("era pra entrar aqui")    
+        tableaux_1.append(aux)   
     for x in tableaux_1:
         print(x)
     return tableaux_1
