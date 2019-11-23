@@ -31,7 +31,7 @@ def pivoting(tableaux,_colPivot, _linePivot):
                     break
             j+=1 
         i+=1              
-    i = 0                    
+    i = 0            
     for line in tableaux:
         aux = []
         j = 0
@@ -74,19 +74,18 @@ def pivoting(tableaux,_colPivot, _linePivot):
 def indexLinePivot(tableaux, minOrMax, _colPivot, _linePivot): #seach index var from base that'll come out
     piv = -1
     if minOrMax == 1:#max
+        print("new column pivot: "+str(_colPivot))
+        print("debug 3")
         i = 0
         maxI = 9999
         for line in tableaux:
             j = 0 
-            if i != _linePivot:
-                if i < len(tableaux)-1:
-                    for col in line:
-                        if j == _colPivot:
-                            if col > 0: #SPLIT TEST
-                                if (float(line[-1])/float(col)) <= maxI:
-                                    maxI = (float(line[-1])/float(col))
-                                    piv = i
-                        j += 1   
+            if i != _linePivot and i < len(tableaux)-1:
+                for col in line:
+                    if j == _colPivot and col > 0 and (float(line[-1])/float(col)) < maxI: #SPLIT TEST
+                            maxI = (float(line[-1])/float(col))
+                            piv = i
+                    j += 1   
             i += 1 
     elif minOrMax == 2: #min
         i = 0
@@ -96,16 +95,9 @@ def indexLinePivot(tableaux, minOrMax, _colPivot, _linePivot): #seach index var 
             if i != _linePivot:
                 if i < len(tableaux)-1:
                     for col in line:
-                        print("ok3")
-                        if j == _colPivot:
-                            print("ok2")
-                            print(col)
-                            if col > 0: #SPLIT TEST
-                                print("ok1")
-                                if (float(line[-1])/float(col)) <= minI:
-                                    print("ok")
-                                    minI = (float(line[-1])/float(col))
-                                    piv = i
+                        if j == _colPivot and col > 0 and (float(line[-1])/float(col)) <= minI:
+                                minI = (float(line[-1])/float(col))
+                                piv = i
                         j += 1     
             i += 1    
     return piv
@@ -125,7 +117,7 @@ def indexColumnPivot(Z, minOrMax, tableaux, _colPivot): # seach the value that'l
                             if i != _colPivot: # 
                                 if i == line[0]:
                                     break
-                                if abs(z_value) > maxI:
+                                if z_value > maxI:
                                     #verific if this index already is in base
                                     k = 1
                                     flag = True
@@ -141,7 +133,7 @@ def indexColumnPivot(Z, minOrMax, tableaux, _colPivot): # seach the value that'l
                     i+=1
             j += 1 
     elif minOrMax == 2:
-        minI = 9999
+        minI = -9999
         piv = 0
         j = 0
         for line in tableaux:
@@ -153,7 +145,7 @@ def indexColumnPivot(Z, minOrMax, tableaux, _colPivot): # seach the value that'l
                             if i != _colPivot: # 
                                 if i == line[0]:
                                     break
-                                if abs(z_value) < minI:
+                                if z_value > minI:
                                     #verific if this index already is in base
                                     k = 1
                                     flag = True
@@ -212,11 +204,11 @@ def seachFirstCP(Z, minOrMax, tableaux): # seach the value that'll come to base 
             i = 0   
             if j < len(tableaux):
                 for z_value in Z:
-                    if i < len(Z)-1:
+                    if i < len(Z)-1 and z_value > 0:
                         if i > 0:
                             if i == line[0]:
                                 break
-                            if abs(z_value) > maxI:
+                            if z_value > maxI:
                                 #check if this index already is in base
                                 k = 1
                                 flag = True
@@ -231,7 +223,7 @@ def seachFirstCP(Z, minOrMax, tableaux): # seach the value that'll come to base 
                     i+=1
             j += 1
     elif minOrMax == 2:
-        minI = 9999
+        minI = -9999
         piv = 1
         j = 0
         for line in tableaux:
@@ -242,7 +234,7 @@ def seachFirstCP(Z, minOrMax, tableaux): # seach the value that'll come to base 
                         if i > 0:
                             if i == line[0]:
                                 break
-                            if abs(z_value) < minI:
+                            if z_value > minI:
                                 #verific if this index already is in base
                                 k = 1
                                 flag = True
@@ -280,14 +272,18 @@ def conditions(Z, minOrMax, tableaux): # break condition
                     k+=1            
             return False
         if minOrMax == 1:
-            if z_value > 0:
+            if z_value < 0:
                 return True
         else:    
-            if z_value < 0:
+            if z_value > 0:
                 return True
         i+=1                                    
 
 def iterations(tableaux, minOrMax):
+    y = 0
+    for col in tableaux[-1]:
+        tableaux[-1][y] = col*-1
+        y+=1
     i = 0
     tam = len(tableaux[-1])# [-1] -> last line(element) from matrix
     if conditions(tableaux[-1], minOrMax, tableaux):
@@ -317,6 +313,26 @@ def iterations(tableaux, minOrMax):
             print(_colPivot)        
             tableaux = pivoting(tableaux, _colPivot, _linePivot)
             i+=1
+    base = []
+    result = []
+    notBase = []
+    i = 0
+    for line in tableaux:
+        if i < len(tableaux)-1:
+            base.append(line[0])
+            result.append(line[-1])
+        i+=1
+
+    for x in range(1,len(tableaux[0])-1):
+        flag = 1
+        for b in base:
+            if x == b:
+                flag = 0
+                break
+        if flag:
+            notBase.append(x)
+
+    return tableaux[-1][-1], base, notBase, result
 
 def make_tableaux(Z,type_restrict, restrict, base, result, row, col):
     #base var_z_valuetriction result
@@ -458,6 +474,14 @@ def main():
     _Z, _restrict, _result, _base, col = pattern_F(_Z, _type_restrict, _restrict, _result, row, col)
     #construct tableaux matrix
     _tableaux = make_tableaux(_Z, _type_restrict, _restrict, _base, _result, row, col)
-    _Z_Result = iterations(_tableaux, _type_minMax)
-
+    _Z_Result, _base, _notBase, _result = iterations(_tableaux, _type_minMax)
+    print("Base: ")
+    i = 0
+    for b in _base:
+        print("X"+str(b)+" = "+str(_result[i]))
+        i+=1
+    print("Não basica: ")
+    for nb in _notBase:
+        print("X"+str(nb)+" = 0")
+    print("Valor de Z: "+str(_Z_Result))    
 main()
