@@ -162,7 +162,7 @@ def indexColumnPivot(Z, minOrMax, tableaux, _colPivot): # seach the value that'l
             j += 1                    
     return piv  
 
-def seachFirstLP(tableaux, minOrMax, _colPivot): #seach index var from base that'll come out
+def seachFirstLN(tableaux, minOrMax, _colPivot): #seach index var from base that'll come out
     piv = 0
     if minOrMax == 1: #max
         i = 0
@@ -194,7 +194,7 @@ def seachFirstLP(tableaux, minOrMax, _colPivot): #seach index var from base that
             i += 1    
     return piv      
 
-def seachFirstCP(Z, minOrMax, tableaux): # seach the value that'll come to base (index column)
+def seachFirstCL(Z, minOrMax, tableaux): # seach the value that'll come to base (index column)
     piv = 0
     if minOrMax == 1:
         maxI = -9999
@@ -288,8 +288,8 @@ def iterations(tableaux, minOrMax):
     tam = len(tableaux[-1])# [-1] -> last line(element) from matrix
     if conditions(tableaux[-1], minOrMax, tableaux):
         print("iteration "+str(i+1))
-        _colPivot = seachFirstCP(tableaux[-1], minOrMax, tableaux) # index column that enter in the base
-        _linePivot = seachFirstLP(tableaux, minOrMax, _colPivot) # index base that out from the base
+        _colPivot = seachFirstCL(tableaux[-1], minOrMax, tableaux) # index column that enter in the base
+        _linePivot = seachFirstLN(tableaux, minOrMax, _colPivot) # index base that out from the base
         #pivoting
         tableaux[_linePivot][0] = _colPivot
         print("_linePivot")
@@ -463,25 +463,30 @@ def minOrMax():
     return op
 
 def main():
-    _Z_Result = 0
-    print("SIMPLEX")
-    row = int(input("Quantas restrições tem o problema: "))
-    col = int(input("Quantas variaveis tem o problema: "))
-    _type_minMax = minOrMax()
-    _Z,_type_restrict, _restrict, _result = z_valuetrict_op(row, col)
-    show(_Z,_type_restrict, _restrict, _result, row, col)
-    #pattern form
-    _Z, _restrict, _result, _base, col = pattern_F(_Z, _type_restrict, _restrict, _result, row, col)
-    #construct tableaux matrix
-    _tableaux = make_tableaux(_Z, _type_restrict, _restrict, _base, _result, row, col)
-    _Z_Result, _base, _notBase, _result = iterations(_tableaux, _type_minMax)
-    print("Base: ")
-    i = 0
-    for b in _base:
-        print("X"+str(b)+" = "+str(_result[i]))
-        i+=1
-    print("Não basica: ")
-    for nb in _notBase:
-        print("X"+str(nb)+" = 0")
-    print("Valor de Z: "+str(_Z_Result))    
+    while True:
+        _Z_Result = 0
+        print("SIMPLEX")
+        row = int(input("Quantas restrições tem o problema: "))
+        col = int(input("Quantas variaveis tem o problema: "))
+        _type_minMax = minOrMax()
+        _Z,_type_restrict, _restrict, _result = z_valuetrict_op(row, col)
+        show(_Z,_type_restrict, _restrict, _result, row, col)
+        #pattern form
+        _Z, _restrict, _result, _base, col = pattern_F(_Z, _type_restrict, _restrict, _result, row, col)
+        #construct tableaux matrix
+        _tableaux = make_tableaux(_Z, _type_restrict, _restrict, _base, _result, row, col)
+        _Z_Result, _base, _notBase, _result = iterations(_tableaux, _type_minMax)
+        print("Base: ")
+        i = 0
+        for b in _base:
+            print("X"+str(b)+" = "+str(_result[i]))
+            i+=1
+        print("Não basica: ")
+        for nb in _notBase:
+            print("X"+str(nb)+" = 0")
+        print("Valor de Z: "+str(_Z_Result))    
+        "Deseja Sair(1-sim, 2-não): "
+        if (int(input("Deseja continuar (1-sim, outro valor - não): ")) != 1):
+            break
+
 main()
