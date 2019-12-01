@@ -2,17 +2,16 @@
 # -*- coding: utf-8 -*-
 
 def pivoting(tableaux,_colPivot, _linePivot):
-    """[summary]
-    
-    [description]
+    """
+    [function to make a pivonting from tableaux matrix]
     
     Arguments:
-        tableaux {[type]} -- [description]
-        _colPivot {[type]} -- [description]
-        _linePivot {[type]} -- [description]
+        tableaux {[matrix]} -- [description]
+        _colPivot {[int]} -- [index of column pivot]
+        _linePivot {[int]} -- [index of line pivot]
     
     Returns:
-        [type] -- [description]
+        [matrix] -- [tableaux pivoted]
     """
     i = 0
     newTableaux = []
@@ -103,18 +102,17 @@ def pivoting(tableaux,_colPivot, _linePivot):
     return newTableaux    
 
 def indexLinePivot(tableaux, minOrMax, _colPivot, _linePivot): #seach index var from base that'll come out
-    """[summary]
-    
-    [description]
+    """
+    [seach the index of the variable that is come out]
     
     Arguments:
-        tableaux {[type]} -- [description]
-        minOrMax {[type]} -- [description]
-        _colPivot {[type]} -- [description]
-        _linePivot {[type]} -- [description]
+        tableaux {[matrix]} -- [matrix with all elements]
+        minOrMax {[int]} -- [<= or >=]
+        _colPivot {[int]} -- [index of actual column pivot]
+        _linePivot {[int]} -- [index of the last line pivot]
     
     Returns:
-        [type] -- [description]
+        [int] -- [index of actual pivot line]
     """
     piv = -1
     if minOrMax == 1:#max
@@ -147,18 +145,17 @@ def indexLinePivot(tableaux, minOrMax, _colPivot, _linePivot): #seach index var 
     return piv
 
 def indexColumnPivot(Z, minOrMax, tableaux, _colPivot): # seach the value that'll come to base (index column)
-    """[summary]
-    
-    [description]
+    """
+    [seach the index of pivot column. That is a value that'll come to base]
     
     Arguments:
-        Z {[type]} -- [description]
-        minOrMax {[type]} -- [description]
-        tableaux {[type]} -- [description]
-        _colPivot): # seach the value that'll come to base (index column {[type]} -- [description]
+        Z {[list]} -- [list from Z line]
+        minOrMax {[int]} -- [description]
+        tableaux {[matrix]} -- [description]
+        _colPivot {[int]} -- [last index of pivot column]
     
     Returns:
-        [type] -- [description]
+        [int] -- [index of actual pivot column]
     """
     piv = 0
     if minOrMax == 1:
@@ -221,17 +218,16 @@ def indexColumnPivot(Z, minOrMax, tableaux, _colPivot): # seach the value that'l
     return piv  
 
 def seachFirstLN(tableaux, minOrMax, _colPivot): #seach index var from base that'll come out
-    """[summary]
-    
-    [description]
+    """
+    [seach the first index of the variable that is come out]
     
     Arguments:
-        tableaux {[type]} -- [description]
-        minOrMax {[type]} -- [description]
-        _colPivot {[type]} -- [description]
+        tableaux {[matrix]} -- [matrix with all elements]
+        minOrMax {[int]} -- [<= or >=]
+        _colPivot {[int]} -- [index of actual column pivot]
     
     Returns:
-        [type] -- [description]
+        [int] -- [index of actual pivot line]
     """
     piv = 0
     if minOrMax == 1: #max case
@@ -266,17 +262,16 @@ def seachFirstLN(tableaux, minOrMax, _colPivot): #seach index var from base that
     return piv
 
 def seachFirstCL(Z, minOrMax, tableaux): # seach the value that'll come to base (index column)
-    """[summary]
-    
-    [description]
+    """
+    [seach the first index of pivot column. That is a value that'll come to base]
     
     Arguments:
-        Z {[type]} -- [description]
-        minOrMax {[type]} -- [description]
-        tableaux): # seach the value that'll come to base (index column {[type]} -- [description]
+        Z {[list]} -- [list from Z line]
+        minOrMax {[int]} -- [description]
+        tableaux {[matrix]} -- [description]
     
     Returns:
-        [type] -- [description]
+        [int] -- [index of actual pivot column]
     """
     piv = 0
     if minOrMax == 1:
@@ -336,18 +331,17 @@ def seachFirstCL(Z, minOrMax, tableaux): # seach the value that'll come to base 
 
 #verify if found the great solution or not
 def conditions(Z, minOrMax, tableaux, lenBase): # break condition
-    """[summary]
-    
-    [description]
+    """
+    [verify if already find the great solution or anothers case]
     
     Arguments:
-        Z {[type]} -- [description]
-        minOrMax {[type]} -- [description]
-        tableaux {[type]} -- [description]
-        lenBase {[type]} -- [description]
+        Z {[list]} -- [line Z]
+        minOrMax {[int]} -- [<= or >=]
+        tableaux {[matrix]} -- [tableau matrix]
+        lenBase {[int]} -- [lenght of base]
     
     Returns:
-        bool -- [description]
+        bool -- [it is optimal or not]
     """
     i = 0
     countZero = 0
@@ -386,17 +380,17 @@ def conditions(Z, minOrMax, tableaux, lenBase): # break condition
         i+=1                                    
 
 def iterations(tableaux, minOrMax, lenBase):
-    """[summary]
-    
-    [description]
+    """
+    [execute all interarions until find the optmial solution]
     
     Arguments:
-        tableaux {[type]} -- [description]
-        minOrMax {[type]} -- [description]
-        lenBase {[type]} -- [description]
+        tableaux {[matrix]} -- [matrix with all values from the all lists]
+        minOrMax {[int]} -- [<= or >=]
+        lenBase {[int]} -- [lenght of base]
     
     Returns:
-        [type] -- [description]
+        [float, list, list, list] -- [value resulting from Z, list of all variables in base, list of all variables in notBase,
+        list from column result]
     """
     if minOrMax == 1:
         y = 0
@@ -413,7 +407,7 @@ def iterations(tableaux, minOrMax, lenBase):
         #pivoting
         tableaux[_linePivot][0] = _colPivot
         # print("_linePivot")
-        # print(_linePivot)
+        # print(_linePivot)list of all variables in
         # print("_colPivot")        
         # print(_colPivot)        
         tableaux = pivoting(tableaux, _colPivot, _linePivot)
@@ -459,18 +453,18 @@ def iterations(tableaux, minOrMax, lenBase):
     #...        ...        ...
     #xxx        xz1...      Z
 def make_tableaux(Z,type_restrict, restrict, base, result, row, col):
-    """[summary]
-    
-    [description]
+    """    
+    [make a tableaux matrix]
     
     Arguments:
-        Z {[type]} -- [description]
-        type_restrict {[type]} -- [description]
-        restrict {[type]} -- [description]
-        base {[type]} -- [description]
-        result {[type]} -- [description]
-        row {[type]} -- [description]
-        col {[type]} -- [description]
+        Z {[list]} -- [list Z values]
+        type_restrict {[int]} -- [<= or >=]
+        restrict {[list]} -- [list of all restrictions]
+        result {[list]} -- [list of results from each restrition]
+        row {[int]} -- [number of line]
+        col {[int]} -- [number of coumn]
+        base {[list]} -- [list of index from all variables that stay in base column]
+
     
     Returns:
         [type] -- [description]
@@ -503,18 +497,18 @@ def make_tableaux(Z,type_restrict, restrict, base, result, row, col):
 def pattern_F(Z, type_restrict, restrict, result, row, col):
     """[summary]
     
-    [description]
+    [addting variables to leave in pattern form]
     
     Arguments:
-        Z {[type]} -- [description]
-        type_restrict {[type]} -- [description]
-        restrict {[type]} -- [description]
-        result {[type]} -- [description]
-        row {[type]} -- [description]
-        col {[type]} -- [description]
+        Z {[list]} -- [list Z values]
+        type_restrict {[int]} -- [<= or >=]
+        restrict {[list]} -- [list of all restrictions]
+        result {[list]} -- [list of results from each restrition]
+        row {[int]} -- [number of line]
+        col {[int]} -- [number of coumn]
     
     Returns:
-        [type] -- [description]
+        [lists] -- [every lists to need to make a first tableaux]
     """
     i = 0
     base = []
@@ -541,17 +535,16 @@ def pattern_F(Z, type_restrict, restrict, result, row, col):
 
 #OBS: end='' param in print() function only work in python 3
 def show(Z, type_restrict, restrict, result, row, col):
-    """[summary]
-    
-    [description]
+    """    
+    [construct and show the functions]
     
     Arguments:
-        Z {[type]} -- [description]
-        type_restrict {[type]} -- [description]
-        restrict {[type]} -- [description]
-        result {[type]} -- [description]
-        row {[type]} -- [description]
-        col {[type]} -- [description]
+        Z {[list]} -- [list Z values]
+        type_restrict {[int]} -- [<= or >=]
+        restrict {[list]} -- [list of all restrictions]
+        result {[list]} -- [list of results from each restrition]
+        row {[int]} -- [number of line]
+        col {[int]} -- [number of coumn]
     """
     print("Z = ", end='')
     aux = 1
@@ -575,16 +568,16 @@ def show(Z, type_restrict, restrict, result, row, col):
                 print(str(restrict[i][j])+"X"+str(j+1)+" + ", end='')
 
 def restrict_op(row, col):
-    """[summary]
-    
-    [description]
+    """
+    [function that capture all restriction of problem]
     
     Arguments:
-        row {[type]} -- [description]
-        col {[type]} -- [description]
+        row {[int]} -- [number of lines]
+        col {[int]} -- [number of columns]
     
     Returns:
-        [type] -- [description]
+        [list, int, matrix, list] -- [list of values from Z, <= or >=, matrix with all restrict values, 
+        list with all results from all restricts]
     """
     var_z = []
     restricts = []
@@ -605,12 +598,11 @@ def restrict_op(row, col):
     return var_z, type_restrict, restricts, result        
 
 def minOrMax():
-    """[summary]
-    
-    [description]
+    """
+    [which type of proble is it]
     
     Returns:
-        [type] -- [description]
+        [int] -- [1 - <=, 2 - >=]
     """
     op = 0
     while(op != 1 and op != 2):
@@ -623,9 +615,8 @@ def minOrMax():
     return op
 
 def main():
-    """[summary]
-    
-    [description]
+    """    
+    [main function that is contais a loop]
     """
     while True:
         _Z_Result = 0
@@ -651,8 +642,7 @@ def main():
         print("Não basica: ")
         for nb in _notBase:
             print("X"+str(nb)+" = 0")
-        print("Valor de Z: "+str(_Z_Result))    
-        "Deseja Sair(1-sim, 2-não): "
+        print("Valor de Z: "+str(_Z_Result))
         if (int(input("Deseja continuar (1-sim, outro valor - não): ")) != 1):
             break
 
